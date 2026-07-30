@@ -1,18 +1,25 @@
-import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+
+import { customRender, screen } from "~/test/render";
+
 import Footer from "./Footer";
 
 describe("Footer", () => {
   it("renders the footer text", () => {
-    render(<Footer />);
+    customRender(<Footer />);
 
-    expect(screen.getByText(/Pokedex Pro/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Pokedex Pro/i),
+    ).toBeInTheDocument();
   });
 
   it("renders the current year", () => {
-    render(<Footer />);
+    customRender(<Footer />);
 
     expect(
-      screen.getByText(new Date().getFullYear().toString()),
+      screen.getByText(
+        new RegExp(new Date().getFullYear().toString()),
+      ),
     ).toBeInTheDocument();
   });
 });

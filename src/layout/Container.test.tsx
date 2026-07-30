@@ -1,17 +1,19 @@
-import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom/vitest";
+import { describe, expect, it } from "vitest";
+
+import { customRender, screen } from "~/test/render";
 
 import Container from "./Container";
 
 describe("Container", () => {
   it("renders children", () => {
-    render(
+    customRender(
       <Container>
         <p>Hello World</p>
       </Container>,
     );
 
-    expect(screen.getByText("Hello World")).toBeInTheDocument();
+    expect(
+      screen.getByText("Hello World"),
+    ).toBeInTheDocument();
   });
 });
