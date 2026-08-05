@@ -8,14 +8,17 @@ describe("PokemonFilters", () => {
   it("renders filters", () => {
     customRender(
       <PokemonFilters
-        type=""
+        search=""
+        onSearchChange={() => {}}
+        type="all"
         sort="asc"
         onTypeChange={() => {}}
         onSortChange={() => {}}
       />,
     );
 
-    expect(screen.getByText(/Type/i)).toBeInTheDocument();
-    expect(screen.getByText(/Sort/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/search pokémon/i)).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: /all types/i })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: /a → z/i })).toBeInTheDocument();
   });
 });

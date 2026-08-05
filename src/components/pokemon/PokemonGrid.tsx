@@ -8,13 +8,7 @@ export interface PokemonGridItem {
   id: number;
   name: string;
   image: string;
-  types: {
-    slot: number;
-    type: {
-      name: string;
-      url: string;
-    };
-  }[];
+  types: string[];
 }
 
 interface PokemonGridProps {

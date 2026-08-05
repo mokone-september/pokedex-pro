@@ -26,8 +26,32 @@ export interface Pokemon {
   }[];
 }
 
+export interface TypeResponse {
+  pokemon: {
+    slot: number;
+    pokemon: {
+      name: string;
+      url: string;
+    };
+  }[];
+}
+
+export async function getPokemonByType(type: string): Promise<TypeResponse> {
+  const res = await fetch(
+    `${BASE_URL}/type/${encodeURIComponent(type)}`,
+  );
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch type: ${type}`);
+  }
+
+  return res.json();
+}
+
+export const POKEMON_LIST_LIMIT = 2000;
+
 export async function getPokemonList(
-  limit = 20,
+  limit = POKEMON_LIST_LIMIT,
   offset = 0,
 ): Promise<PokemonListResponse> {
   const res = await fetch(

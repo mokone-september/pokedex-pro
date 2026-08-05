@@ -10,12 +10,14 @@ describe("PokemonStats", () => {
       <PokemonStats
         stats={[
           {
-            name: "HP",
-            value: 45,
+            base_stat: 45,
+            effort: 0,
+            stat: { name: "hp", url: "" },
           },
           {
-            name: "Attack",
-            value: 49,
+            base_stat: 49,
+            effort: 0,
+            stat: { name: "attack", url: "" },
           },
         ]}
       />,
