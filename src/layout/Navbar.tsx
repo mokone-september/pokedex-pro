@@ -1,29 +1,34 @@
-import { Box, Flex, Heading, Button } from "@chakra-ui/react";
+import Image from "next/image";
 import Link from "next/link";
-import Container from "./Container";
+
+import { Box, Container, Flex, Heading } from "@chakra-ui/react";
 
 export default function Navbar() {
   return (
     <Box
       as="header"
       borderBottomWidth="1px"
+      bg="bg"
+      py={4}
       position="sticky"
       top={0}
-      bg="bg"
-      zIndex={100}
+      zIndex={10}
     >
-      <Container>
-        <Flex h="70px" align="center" justify="space-between">
-          <Heading size="md">Pokedex Pro</Heading>
+      <Container maxW="7xl">
+        <Flex align="center" justify="space-between">
+          <Link href="/">
+            <Flex align="center" gap={3}>
+              <Image
+                src="/logo.svg"
+                alt="Pokedex Pro Logo"
+                width={40}
+                height={40}
+                priority
+              />
 
-          <Flex gap={6} align="center">
-            <Link href="/">Home</Link>
-            <Link href="/pokemon">Pokemon</Link>
-            <Link href="/about">About</Link>
-            <Link href="/contact">Contact</Link>
-
-            <Button colorPalette="blue">Sign In</Button>
-          </Flex>
+              <Heading size="lg">Pokédex Pro</Heading>
+            </Flex>
+          </Link>
         </Flex>
       </Container>
     </Box>
