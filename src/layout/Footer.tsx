@@ -1,14 +1,18 @@
-import { Box, Text } from "@chakra-ui/react";
-import Container from "./Container";
+import Image from "next/image";
 
-export default function Footer() {
+import { HStack, Text } from "@chakra-ui/react";
+
+export function Footer() {
   return (
-    <Box as="footer" py={10} borderTopWidth="1px" mt={20}>
-      <Container>
-        <Text textAlign="center" color="fg.muted">
-          © {new Date().getFullYear()} Pokedex Pro. Built with Next.js, Chakra UI and tRPC.
-        </Text>
-      </Container>
-    </Box>
+    <HStack justify="center" py={8} gap={3}>
+      <Image
+        src="/logo.svg"
+        alt="Pokédex Pro"
+        width={24}
+        height={24}
+      />
+
+      <Text>Pokédex Pro</Text>
+    </HStack>
   );
 }

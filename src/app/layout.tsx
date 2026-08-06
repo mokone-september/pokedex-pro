@@ -7,8 +7,10 @@ import { Providers } from "~/app/components/providers";
 
 export const metadata: Metadata = {
   title: "Pokédex Pro",
-  description: "Modern Pokémon explorer built with the T3 Stack",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  description:  "A modern Pokédex built with Next.js and PokéAPI.",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 const geist = Geist({
