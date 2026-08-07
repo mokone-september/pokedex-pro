@@ -19,7 +19,7 @@ export default function Navbar() {
           <Link href="/">
             <Flex align="center" gap={3}>
               <Image
-                src="/logo.svg"
+                src="/logo-icon.svg"
                 alt="Pokedex Pro Logo"
                 width={40}
                 height={40}
