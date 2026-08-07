@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Pokédex Pro",
   description:  "A modern Pokédex built with Next.js and PokéAPI.",
   icons: {
-    icon: "/logo.svg",
+    icon: "/logo-icon.svg",
   },
 };
 
