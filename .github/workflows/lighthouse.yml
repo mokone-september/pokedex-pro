@@ -1,0 +1,62 @@
+name: Lighthouse
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse Performance Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.11.1
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Start application
+        run: pnpm start > next.log 2>&1 &
+
+      - name: Wait for application
+        run: pnpm dlx wait-on http://127.0.0.1:3000
+
+      - name: Run Lighthouse CI
+        run: pnpm dlx @lhci/cli@0.15.1 autorun
+        env:
+          LHCI_BUILD_CONTEXT__CURRENT_BRANCH: ${{ github.head_ref || github.ref_name }}
+
+      - name: Upload Next.js logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-lighthouse-logs
+          path: next.log
+          if-no-files-found: ignore

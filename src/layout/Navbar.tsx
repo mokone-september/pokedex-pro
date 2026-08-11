@@ -1,35 +1,79 @@
-import Image from "next/image";
-import Link from "next/link";
+"use client";
 
-import { Box, Container, Flex, Heading } from "@chakra-ui/react";
+import NextLink from "next/link";
+import {
+  Box,
+  Button,
+  Container,
+  HStack,
+  Link,
+  Text,
+} from "@chakra-ui/react";
 
 export default function Navbar() {
   return (
     <Box
-      as="header"
+      as="nav"
       borderBottomWidth="1px"
-      bg="bg"
-      py={4}
-      position="sticky"
-      top={0}
-      zIndex={10}
+      borderColor="gray.200"
+      bg="white"
     >
-      <Container maxW="7xl">
-        <Flex align="center" justify="space-between">
-          <Link href="/">
-            <Flex align="center" gap={3}>
-              <Image
-                src="/logo-icon.svg"
-                alt="Pokedex Pro Logo"
-                width={40}
-                height={40}
-                priority
-              />
-
-              <Heading size="lg">Pokédex Pro</Heading>
-            </Flex>
+      <Container maxW="1200px" py={4}>
+        <HStack
+          justify="space-between"
+          align="center"
+        >
+          <Link
+            asChild
+            fontSize="xl"
+            fontWeight="bold"
+            color="gray.900"
+            _hover={{
+              textDecoration: "none",
+            }}
+          >
+            <NextLink href="/">
+              <Text>Pokédex</Text>
+            </NextLink>
           </Link>
-        </Flex>
+
+          <HStack gap={6}>
+            <Link
+              asChild
+              color="gray.700"
+              fontWeight="medium"
+              _hover={{
+                color: "blue.600",
+                textDecoration: "none",
+              }}
+            >
+              <NextLink href="/">
+                Home
+              </NextLink>
+            </Link>
+
+            <Link
+              asChild
+              color="gray.700"
+              fontWeight="medium"
+              _hover={{
+                color: "blue.600",
+                textDecoration: "none",
+              }}
+            >
+              <NextLink href="/pokemon">
+                Pokémon
+              </NextLink>
+            </Link>
+
+            <Button
+              size="sm"
+              colorPalette="blue"
+            >
+              Sign In
+            </Button>
+          </HStack>
+        </HStack>
       </Container>
     </Box>
   );
