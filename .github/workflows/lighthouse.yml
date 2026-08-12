@@ -51,12 +51,24 @@ jobs:
 
       - name: Wait for application
         run: |
-          pnpm exec wait-on http://127.0.0.1:3000
-        env:
-          WAIT_ON_TIMEOUT: 60000
+          for i in {1..60}; do
+            if curl --silent --fail http://127.0.0.1:3000 > /dev/null; then
+              echo "Application is ready"
+              exit 0
+            fi
+
+            echo "Waiting for Next.js application..."
+            sleep 1
+          done
+
+          echo "Application failed to start"
+          cat next.log
+          exit 1
 
       - name: Run Lighthouse
-        run: pnpm dlx @lhci/cli@0.15.1 autorun
+        run: |
+          pnpm dlx @lhci/cli@0.15.1 autorun \
+            --collect.url=http://127.0.0.1:3000
         env:
           LHCI_BUILD_CONTEXT__CURRENT_BRANCH: ${{ github.head_ref || github.ref_name }}
 
