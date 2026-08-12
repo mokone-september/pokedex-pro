@@ -41,17 +41,31 @@ jobs:
 
       - name: Build application
         run: pnpm build
+        env:
+          SKIP_ENV_VALIDATION: "1"
 
       - name: Start application
-        run: pnpm start > next.log 2>&1 &
+        run: |
+          pnpm start > next.log 2>&1 &
+          echo $! > next.pid
 
       - name: Wait for application
-        run: pnpm dlx wait-on http://127.0.0.1:3000
+        run: |
+          pnpm exec wait-on http://127.0.0.1:3000
+        env:
+          WAIT_ON_TIMEOUT: 60000
 
-      - name: Run Lighthouse CI
+      - name: Run Lighthouse
         run: pnpm dlx @lhci/cli@0.15.1 autorun
         env:
           LHCI_BUILD_CONTEXT__CURRENT_BRANCH: ${{ github.head_ref || github.ref_name }}
+
+      - name: Stop application
+        if: always()
+        run: |
+          if [ -f next.pid ]; then
+            kill "$(cat next.pid)" || true
+          fi
 
       - name: Upload Next.js logs
         if: always()
