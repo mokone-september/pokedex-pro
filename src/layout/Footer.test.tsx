@@ -1,24 +1,36 @@
-import { describe, expect, it } from "vitest";
+import {
+  describe,
+  expect,
+  it,
+} from "vitest";
 
-import { customRender, screen } from "~/test/render";
+import {
+  render,
+  screen,
+} from "../test-utils/render";
 
 import Footer from "./Footer";
 
 describe("Footer", () => {
   it("renders the footer text", () => {
-    customRender(<Footer />);
+    render(<Footer />);
 
     expect(
-      screen.getByText(/Pokedex Pro/i),
+      screen.getByText(
+        /Pokédex\. All rights reserved\./i,
+      ),
     ).toBeInTheDocument();
   });
 
   it("renders the current year", () => {
-    customRender(<Footer />);
+    render(<Footer />);
+
+    const currentYear =
+      new Date().getFullYear().toString();
 
     expect(
       screen.getByText(
-        new RegExp(new Date().getFullYear().toString()),
+        new RegExp(currentYear),
       ),
     ).toBeInTheDocument();
   });

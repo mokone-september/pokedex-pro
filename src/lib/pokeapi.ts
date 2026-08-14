@@ -36,16 +36,26 @@ export interface TypeResponse {
   }[];
 }
 
-export async function getPokemonByType(type: string): Promise<TypeResponse> {
-  const res = await fetch(
-    `${BASE_URL}/type/${encodeURIComponent(type)}`,
-  );
+async function fetchJson<T>(
+  url: string,
+): Promise<T> {
+  const res = await fetch(url);
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch type: ${type}`);
+    throw new Error(
+      `Request failed: ${res.status} ${res.statusText}`,
+    );
   }
 
-  return res.json();
+  return (await res.json()) as T;
+}
+
+export async function getPokemonByType(
+  type: string,
+): Promise<TypeResponse> {
+  return fetchJson<TypeResponse>(
+    `${BASE_URL}/type/${encodeURIComponent(type)}`,
+  );
 }
 
 export const POKEMON_LIST_LIMIT = 2000;
@@ -54,25 +64,15 @@ export async function getPokemonList(
   limit = POKEMON_LIST_LIMIT,
   offset = 0,
 ): Promise<PokemonListResponse> {
-  const res = await fetch(
+  return fetchJson<PokemonListResponse>(
     `${BASE_URL}/pokemon?limit=${limit}&offset=${offset}`,
   );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch Pokémon list");
-  }
-
-  return res.json();
 }
 
-export async function getPokemon(name: string): Promise<Pokemon> {
-  const res = await fetch(
+export async function getPokemon(
+  name: string,
+): Promise<Pokemon> {
+  return fetchJson<Pokemon>(
     `${BASE_URL}/pokemon/${encodeURIComponent(name)}`,
   );
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch Pokémon: ${name}`);
-  }
-
-  return res.json();
 }

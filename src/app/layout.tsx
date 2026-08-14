@@ -1,28 +1,24 @@
 import "~/styles/globals.css";
 
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
 
 import { Providers } from "~/app/components/providers";
 
 export const metadata: Metadata = {
   title: "Pokédex Pro",
-  description:  "A modern Pokédex built with Next.js and PokéAPI.",
+  description: "A modern Pokédex built with Next.js and PokéAPI.",
   icons: {
     icon: "/logo-icon.svg",
   },
 };
 
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-});
-
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en" className={geist.variable} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body>
         <Providers>{children}</Providers>
       </body>
