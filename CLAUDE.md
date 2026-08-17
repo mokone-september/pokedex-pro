@@ -22,7 +22,7 @@ Every feature should be:
 - TypeScript (strict)
 - Chakra UI
 - TanStack Query
-- TinyBase
+- Legend-State
 - Vitest
 - React Testing Library
 - pnpm

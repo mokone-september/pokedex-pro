@@ -16,13 +16,13 @@ A modern Pokédex built with Next.js, TypeScript, Chakra UI and React Query.
 
 </div>
 
-### A modern Pokédex built with Next.js, TypeScript, Chakra UI, React Query, and TinyBase.
+### A modern Pokédex built with Next.js, TypeScript, Chakra UI, React Query, and Legend-State.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 ![Chakra UI](https://img.shields.io/badge/Chakra_UI-3-319795?logo=chakraui)
 ![React Query](https://img.shields.io/badge/TanStack_Query-5-FF4154?logo=reactquery)
-![TinyBase](https://img.shields.io/badge/TinyBase-Latest-4CAF50)
+![Legend-State](https://img.shields.io/badge/Legend--State-3.x-4CAF50)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 </div>
@@ -63,7 +63,7 @@ Rather than being just another Pokédex, this project serves as a portfolio-qual
 
 ### Planned
 
-- ❤️ Favorites (TinyBase)
+- ❤️ Favorites (Legend-State)
 - 📄 Pokémon Details Page
 - 🏷️ Filter by Type
 - 🌙 Dark Mode
@@ -92,7 +92,7 @@ Rather than being just another Pokédex, this project serves as a portfolio-qual
 
 - PokéAPI
 - TanStack React Query
-- TinyBase
+- Legend-State
 
 ## Testing
 

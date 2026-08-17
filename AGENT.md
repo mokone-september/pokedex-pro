@@ -18,7 +18,7 @@ The project should showcase:
 - TypeScript
 - Chakra UI
 - React Query
-- TinyBase
+- Legend-State
 - Modern Git workflow
 - Testing
 - Accessibility
@@ -128,7 +128,7 @@ Memoize expensive computations when needed.
 
 Use React Query for server state.
 
-Use TinyBase for local persistence.
+Use Legend-State for local persistence.
 
 ---
 
@@ -237,19 +237,17 @@ usePokemonList()
 
 ---
 
-## TinyBase
+## Legend-State
 
-TinyBase should manage client-side persistence.
+Legend-State should manage client-side state and persistence.
 
-Examples:
+Keep local-first state such as:
+- favorites
+- user preferences
+- recently viewed Pokémon
 
-Favorites
-
-Recently viewed Pokémon
-
-User preferences
-
-Do not store server data in TinyBase unless necessary.
+Do not store server data in Legend-State unless necessary.
+Use TanStack Query for server/API state.
 
 ---
 
