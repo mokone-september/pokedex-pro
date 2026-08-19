@@ -8,9 +8,12 @@ import { recentlyViewed$ } from "./recently-viewed.store";
 export const RECENTLY_VIEWED_STORAGE_KEY =
   "pokedex-pro-recently-viewed";
 
-syncObservable(recentlyViewed$, {
-  persist: {
-    name: RECENTLY_VIEWED_STORAGE_KEY,
-    plugin: ObservablePersistLocalStorage,
+export const recentlyViewedPersistence = syncObservable(
+  recentlyViewed$,
+  {
+    persist: {
+      name: RECENTLY_VIEWED_STORAGE_KEY,
+      plugin: ObservablePersistLocalStorage,
+    },
   },
-});
+);

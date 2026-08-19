@@ -4,11 +4,14 @@ import Link from "next/link";
 
 import {
   Badge,
+  Box,
   Card,
   Heading,
   Stack,
   Text,
 } from "@chakra-ui/react";
+
+import { FavoriteButton } from "~/features/favorites/FavoriteButton";
 
 import PokemonImage from "./PokemonImage";
 import PokemonTypes from "./PokemonTypes";
@@ -27,20 +30,35 @@ export default function PokemonCard({
   types,
 }: PokemonCardProps) {
   return (
-    <Link
-      href={`/pokemon/${id}`}
-      style={{ textDecoration: "none" }}
+    <Card.Root
+      borderWidth="1px"
+      borderRadius="2xl"
+      overflow="hidden"
+      transition="all 0.2s"
+      position="relative"
+      _hover={{
+        transform: "translateY(-4px)",
+        shadow: "lg",
+      }}
     >
-      <Card.Root
-        borderWidth="1px"
-        borderRadius="2xl"
-        overflow="hidden"
-        transition="all 0.2s"
-        cursor="pointer"
-        _hover={{
-          transform: "translateY(-4px)",
-          shadow: "lg",
-        }}
+      <Box
+        position="absolute"
+        top={3}
+        right={3}
+        zIndex={1}
+      >
+        <FavoriteButton
+          pokemon={{
+            id,
+            name,
+            image,
+          }}
+        />
+      </Box>
+
+      <Link
+        href={`/pokemon/${id}`}
+        style={{ textDecoration: "none" }}
       >
         <Card.Body>
           <Stack align="center" gap={5}>
@@ -75,7 +93,7 @@ export default function PokemonCard({
             </Text>
           </Stack>
         </Card.Body>
-      </Card.Root>
-    </Link>
+      </Link>
+    </Card.Root>
   );
 }
