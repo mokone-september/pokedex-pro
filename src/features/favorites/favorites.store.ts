@@ -11,13 +11,11 @@ export const favorites$ = observable<Record<string, FavoritePokemon>>({});
 export function isFavorite(id: number): boolean {
   const key = String(id);
   const favorites = favorites$.get();
-
   return favorites[key] !== undefined;
 }
 
 export function addFavorite(pokemon: FavoritePokemon): void {
   const key = String(pokemon.id);
-
   favorites$.set({
     ...favorites$.get(),
     [key]: pokemon,
@@ -27,39 +25,28 @@ export function addFavorite(pokemon: FavoritePokemon): void {
 export function removeFavorite(id: number): void {
   const key = String(id);
   const favorites = favorites$.get();
-
   if (!(key in favorites)) {
     return;
   }
-
   const remaining = Object.fromEntries(
     Object.entries(favorites).filter(
       ([favoriteId]) => favoriteId !== key,
     ),
   );
-
   favorites$.set(remaining);
 }
 
+/**
+ * Single source of truth for toggling a favorite.
+ * Delegates to addFavorite/removeFavorite so there's one
+ * implementation of the add-vs-remove decision.
+ */
 export function toggleFavorite(pokemon: FavoritePokemon): void {
-  const key = String(pokemon.id);
-  const favorites = favorites$.get();
-
-  if (favorites[key] !== undefined) {
-    const remaining = Object.fromEntries(
-      Object.entries(favorites).filter(
-        ([favoriteId]) => favoriteId !== key,
-      ),
-    );
-
-    favorites$.set(remaining);
+  if (isFavorite(pokemon.id)) {
+    removeFavorite(pokemon.id);
     return;
   }
-
-  favorites$.set({
-    ...favorites,
-    [key]: pokemon,
-  });
+  addFavorite(pokemon);
 }
 
 export function getFavorites(): FavoritePokemon[] {

@@ -7,7 +7,7 @@ import { favorites$ } from "./favorites.store";
 
 export const FAVORITES_STORAGE_KEY = "pokedex-pro-favorites";
 
-syncObservable(favorites$, {
+export const favoritesPersistence = syncObservable(favorites$, {
   persist: {
     name: FAVORITES_STORAGE_KEY,
     plugin: ObservablePersistLocalStorage,
