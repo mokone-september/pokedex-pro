@@ -1,19 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
 import {
   Box,
   Heading,
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-
 import PokemonFilters from "~/components/pokemon/PokemonFilters";
 import PokemonGrid from "~/components/pokemon/PokemonGrid";
 import PokemonSkeleton from "~/components/pokemon/PokemonSkeleton";
 import Container from "~/layout/Container";
 import Navbar from "~/layout/Navbar";
+import { RecentlyViewedList } from "~/features/recently-viewed/RecentlyViewedList";
 import {
   usePokemonByType,
   usePokemonDetails,
@@ -37,7 +36,6 @@ export default function HomePage() {
     isLoading: isListLoading,
     error: listError,
   } = usePokemonList();
-
   const {
     data: typeData,
     isLoading: isTypeLoading,
@@ -48,7 +46,6 @@ export default function HomePage() {
     if (type === "all") {
       return pokemonList?.results ?? [];
     }
-
     return (
       typeData?.pokemon.map(({ pokemon }) => ({
         name: pokemon.name,
@@ -88,17 +85,17 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-
       <Box as="main" py={8}>
         <Container>
           <Heading size="2xl" mb={2}>
             Pokédex Pro
           </Heading>
-
           <Text color="fg.muted" mb={8}>
             Search Pokémon by name, filter by type, and explore the full
             Pokédex.
           </Text>
+
+          <RecentlyViewedList />
 
           <PokemonFilters
             search={search}
@@ -108,7 +105,6 @@ export default function HomePage() {
             sort={sort}
             onSortChange={setSort}
           />
-
           {error ? (
             <Text color="red.500">Something went wrong loading Pokémon.</Text>
           ) : isLoading ? (

@@ -6,8 +6,8 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-
 import { getPokemon } from "~/lib/pokeapi";
+import { RecordRecentlyViewed } from "~/features/recently-viewed/RecordRecentlyViewed";
 
 interface PokemonPageProps {
   params: Promise<{
@@ -21,8 +21,17 @@ export default async function PokemonPage({
   const { name } = await params;
   const pokemon = await getPokemon(name);
 
+  const spriteSrc = pokemon.sprites.front_default ?? "/logo-icon.svg";
+
   return (
     <Box as="main" py={{ base: 10, md: 16 }}>
+      <RecordRecentlyViewed
+        pokemon={{
+          id: pokemon.id,
+          name: pokemon.name,
+          image: pokemon.sprites.front_default ?? null,
+        }}
+      />
       <Container maxW="5xl">
         <SimpleGrid
           columns={{ base: 1, md: 2 }}
@@ -31,17 +40,13 @@ export default async function PokemonPage({
         >
           <Box textAlign="center">
             <Image
-              src={
-                pokemon.sprites.front_default ??
-                "/logo-icon.svg"
-              }
+              src={spriteSrc}
               alt={pokemon.name}
               mx="auto"
               boxSize={{ base: "220px", md: "320px" }}
               objectFit="contain"
             />
           </Box>
-
           <Box>
             <Text
               fontSize="sm"
@@ -51,7 +56,6 @@ export default async function PokemonPage({
             >
               Pokémon #{pokemon.id}
             </Text>
-
             <Heading
               as="h1"
               size="2xl"
@@ -60,7 +64,6 @@ export default async function PokemonPage({
             >
               {pokemon.name}
             </Heading>
-
             <SimpleGrid columns={2} gap={4}>
               <Box>
                 <Text fontSize="sm" color="gray.500">
@@ -70,7 +73,6 @@ export default async function PokemonPage({
                   {pokemon.height / 10} m
                 </Text>
               </Box>
-
               <Box>
                 <Text fontSize="sm" color="gray.500">
                   Weight
@@ -80,7 +82,6 @@ export default async function PokemonPage({
                 </Text>
               </Box>
             </SimpleGrid>
-
             <Box mt={8}>
               <Text
                 fontSize="sm"
@@ -89,7 +90,6 @@ export default async function PokemonPage({
               >
                 Types
               </Text>
-
               <Box display="flex" gap={3} flexWrap="wrap">
                 {pokemon.types.map(({ slot, type }) => (
                   <Text
