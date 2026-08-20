@@ -21,7 +21,6 @@ export function addRecentlyViewed(
   pokemon: Omit<RecentlyViewedPokemon, "viewedAt">,
 ): void {
   const currentItems = recentlyViewed$.items.get();
-
   const nextItems: RecentlyViewedPokemon[] = [
     {
       ...pokemon,
@@ -29,15 +28,16 @@ export function addRecentlyViewed(
     },
     ...currentItems.filter((item) => item.id !== pokemon.id),
   ].slice(0, MAX_RECENTLY_VIEWED);
-
   recentlyViewed$.items.set(nextItems);
 }
 
+/**
+ * Removes a single pokemon from the recently-viewed history.
+ * Used by the per-item "remove" affordance in the Recently Viewed UI.
+ */
 export function removeRecentlyViewed(id: number): void {
   recentlyViewed$.items.set(
-    recentlyViewed$.items
-      .get()
-      .filter((item) => item.id !== id),
+    recentlyViewed$.items.get().filter((item) => item.id !== id),
   );
 }
 
@@ -47,10 +47,4 @@ export function clearRecentlyViewed(): void {
 
 export function getRecentlyViewed(): RecentlyViewedPokemon[] {
   return recentlyViewed$.items.get();
-}
-
-export function hasRecentlyViewed(id: number): boolean {
-  return recentlyViewed$.items
-    .get()
-    .some((item) => item.id === id);
 }
