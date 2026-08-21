@@ -1,4 +1,5 @@
 import { observable } from "@legendapp/state";
+import type { PokemonTypeValue } from "~/lib/pokemon-types";
 
 export type ThemePreference = "light" | "dark" | "system";
 export type SortPreference = "asc" | "desc";
@@ -6,7 +7,7 @@ export type SortPreference = "asc" | "desc";
 export interface PreferencesState {
   theme: ThemePreference;
   sort: SortPreference;
-  preferredPokemonType: string;
+  preferredPokemonType: PokemonTypeValue;
   showGridView: boolean;
   reduceMotion: boolean;
 }
@@ -31,7 +32,7 @@ export function setSort(sort: SortPreference): void {
   preferences$.sort.set(sort);
 }
 
-export function setPreferredPokemonType(type: string): void {
+export function setPreferredPokemonType(type: PokemonTypeValue): void {
   preferences$.preferredPokemonType.set(type);
 }
 
