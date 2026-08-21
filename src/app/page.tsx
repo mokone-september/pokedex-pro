@@ -7,12 +7,18 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
+import { useValue } from "@legendapp/state/react";
 import PokemonFilters from "~/components/pokemon/PokemonFilters";
 import PokemonGrid from "~/components/pokemon/PokemonGrid";
 import PokemonSkeleton from "~/components/pokemon/PokemonSkeleton";
 import Container from "~/layout/Container";
 import Navbar from "~/layout/Navbar";
 import { RecentlyViewedList } from "~/features/recently-viewed/RecentlyViewedList";
+import {
+  preferences$,
+  setPreferredPokemonType,
+  setSort,
+} from "~/features/preferences/preferences.store";
 import {
   usePokemonByType,
   usePokemonDetails,
@@ -28,8 +34,13 @@ const DISPLAY_LIMIT = 24;
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
-  const [type, setType] = useState("all");
-  const [sort, setSort] = useState("asc");
+
+  // type and sort are persisted preferences: read reactively from the
+  // store so this component re-renders when they change (including on
+  // rehydration from localStorage), and write through the store's own
+  // setters so the persistence layer picks up every change.
+  const type = useValue(() => preferences$.preferredPokemonType.get());
+  const sort = useValue(() => preferences$.sort.get());
 
   const {
     data: pokemonList,
@@ -56,10 +67,7 @@ export default function HomePage() {
 
   const filteredNames = useMemo(() => {
     const searched = searchPokemonByName(sourceList, search);
-    return sortPokemonByName(searched, sort as "asc" | "desc").slice(
-      0,
-      DISPLAY_LIMIT,
-    );
+    return sortPokemonByName(searched, sort).slice(0, DISPLAY_LIMIT);
   }, [search, sort, sourceList]);
 
   const detailQueries = usePokemonDetails(
@@ -101,7 +109,7 @@ export default function HomePage() {
             search={search}
             onSearchChange={setSearch}
             type={type}
-            onTypeChange={setType}
+            onTypeChange={setPreferredPokemonType}
             sort={sort}
             onSortChange={setSort}
           />

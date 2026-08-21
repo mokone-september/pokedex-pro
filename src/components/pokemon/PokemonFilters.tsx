@@ -6,39 +6,18 @@ import {
   Input,
   NativeSelect,
 } from "@chakra-ui/react";
+import { POKEMON_TYPES, type PokemonTypeValue } from "~/lib/pokemon-types";
+
+export type SortValue = "asc" | "desc";
 
 interface PokemonFiltersProps {
   search: string;
   onSearchChange: (value: string) => void;
-
-  type: string;
-  onTypeChange: (value: string) => void;
-
-  sort: string;
-  onSortChange: (value: string) => void;
+  type: PokemonTypeValue;
+  onTypeChange: (value: PokemonTypeValue) => void;
+  sort: SortValue;
+  onSortChange: (value: SortValue) => void;
 }
-
-const pokemonTypes = [
-  { label: "All Types", value: "all" },
-  { label: "Normal", value: "normal" },
-  { label: "Fire", value: "fire" },
-  { label: "Water", value: "water" },
-  { label: "Grass", value: "grass" },
-  { label: "Electric", value: "electric" },
-  { label: "Ice", value: "ice" },
-  { label: "Fighting", value: "fighting" },
-  { label: "Poison", value: "poison" },
-  { label: "Ground", value: "ground" },
-  { label: "Flying", value: "flying" },
-  { label: "Psychic", value: "psychic" },
-  { label: "Bug", value: "bug" },
-  { label: "Rock", value: "rock" },
-  { label: "Ghost", value: "ghost" },
-  { label: "Dragon", value: "dragon" },
-  { label: "Dark", value: "dark" },
-  { label: "Steel", value: "steel" },
-  { label: "Fairy", value: "fairy" },
-] as const;
 
 const sortOptions = [
   { label: "A → Z", value: "asc" },
@@ -69,16 +48,15 @@ export default function PokemonFilters({
           }
           maxW="320px"
         />
-
         <NativeSelect.Root width="220px">
           <NativeSelect.Field
             aria-label="Filter by type"
             value={type}
             onChange={(event) =>
-              onTypeChange(event.target.value)
+              onTypeChange(event.target.value as PokemonTypeValue)
             }
           >
-            {pokemonTypes.map((item) => (
+            {POKEMON_TYPES.map((item) => (
               <option
                 key={item.value}
                 value={item.value}
@@ -87,16 +65,14 @@ export default function PokemonFilters({
               </option>
             ))}
           </NativeSelect.Field>
-
           <NativeSelect.Indicator />
         </NativeSelect.Root>
-
         <NativeSelect.Root width="180px">
           <NativeSelect.Field
             aria-label="Sort Pokémon"
             value={sort}
             onChange={(event) =>
-              onSortChange(event.target.value)
+              onSortChange(event.target.value as SortValue)
             }
           >
             {sortOptions.map((item) => (
@@ -108,7 +84,6 @@ export default function PokemonFilters({
               </option>
             ))}
           </NativeSelect.Field>
-
           <NativeSelect.Indicator />
         </NativeSelect.Root>
       </HStack>
