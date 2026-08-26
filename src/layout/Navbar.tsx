@@ -1,5 +1,4 @@
 "use client";
-
 import NextLink from "next/link";
 import {
   Box,
@@ -9,14 +8,15 @@ import {
   Link,
   Text,
 } from "@chakra-ui/react";
+import { ThemeToggle } from "~/features/preferences/ThemeToggle";
 
 export default function Navbar() {
   return (
     <Box
       as="nav"
       borderBottomWidth="1px"
-      borderColor="gray.200"
-      bg="white"
+      borderColor="border"
+      bg="bg.panel"
     >
       <Container maxW="1200px" py={4}>
         <HStack
@@ -27,7 +27,7 @@ export default function Navbar() {
             asChild
             fontSize="xl"
             fontWeight="bold"
-            color="gray.900"
+            color="fg"
             _hover={{
               textDecoration: "none",
             }}
@@ -36,11 +36,10 @@ export default function Navbar() {
               <Text>Pokédex</Text>
             </NextLink>
           </Link>
-
           <HStack gap={6}>
             <Link
               asChild
-              color="gray.700"
+              color="fg.muted"
               fontWeight="medium"
               _hover={{
                 color: "blue.600",
@@ -51,10 +50,9 @@ export default function Navbar() {
                 Home
               </NextLink>
             </Link>
-
             <Link
               asChild
-              color="gray.700"
+              color="fg.muted"
               fontWeight="medium"
               _hover={{
                 color: "blue.600",
@@ -65,7 +63,7 @@ export default function Navbar() {
                 Pokémon
               </NextLink>
             </Link>
-
+            <ThemeToggle />
             <Button
               size="sm"
               colorPalette="blue"
