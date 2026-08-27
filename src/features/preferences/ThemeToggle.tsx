@@ -1,6 +1,6 @@
 "use client";
 
-import { IconButton, Menu, Portal } from "@chakra-ui/react";
+import { ClientOnly, IconButton, Menu, Portal, Skeleton } from "@chakra-ui/react";
 import { Check, Moon, Sun, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
 import type { ReactNode } from "react";
@@ -43,39 +43,41 @@ export function ThemeToggle() {
     );
 
   return (
-    <Menu.Root>
-      <Menu.Trigger asChild>
-        <IconButton
-          type="button"
-          aria-label="Change theme"
-          variant="ghost"
-          size="sm"
-        >
-          {activeIcon}
-        </IconButton>
-      </Menu.Trigger>
-      <Portal>
-        <Menu.Positioner>
-          <Menu.Content>
-            {options.map((option) => (
-              <Menu.Item
-                key={option.value}
-                value={option.value}
-                onClick={() => handleSelect(option.value)}
-                display="flex"
-                alignItems="center"
-                gap={2}
-              >
-                {option.icon}
-                {option.label}
-                {theme === option.value && (
-                  <Check size={14} style={{ marginLeft: "auto" }} />
-                )}
-              </Menu.Item>
-            ))}
-          </Menu.Content>
-        </Menu.Positioner>
-      </Portal>
-    </Menu.Root>
+    <ClientOnly fallback={<Skeleton boxSize="8" />}>
+      <Menu.Root>
+        <Menu.Trigger asChild>
+          <IconButton
+            type="button"
+            aria-label="Change theme"
+            variant="ghost"
+            size="sm"
+          >
+            {activeIcon}
+          </IconButton>
+        </Menu.Trigger>
+        <Portal>
+          <Menu.Positioner>
+            <Menu.Content>
+              {options.map((option) => (
+                <Menu.Item
+                  key={option.value}
+                  value={option.value}
+                  onClick={() => handleSelect(option.value)}
+                  display="flex"
+                  alignItems="center"
+                  gap={2}
+                >
+                  {option.icon}
+                  {option.label}
+                  {theme === option.value && (
+                    <Check size={14} style={{ marginLeft: "auto" }} />
+                  )}
+                </Menu.Item>
+              ))}
+            </Menu.Content>
+          </Menu.Positioner>
+        </Portal>
+      </Menu.Root>
+    </ClientOnly>
   );
 }
