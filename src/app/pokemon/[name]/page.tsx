@@ -8,21 +8,17 @@ import {
 } from "@chakra-ui/react";
 import { getPokemon } from "~/lib/pokeapi";
 import { RecordRecentlyViewed } from "~/features/recently-viewed/RecordRecentlyViewed";
-
 interface PokemonPageProps {
   params: Promise<{
     name: string;
   }>;
 }
-
 export default async function PokemonPage({
   params,
 }: PokemonPageProps) {
   const { name } = await params;
   const pokemon = await getPokemon(name);
-
   const spriteSrc = pokemon.sprites.front_default ?? "/logo-icon.svg";
-
   return (
     <Box as="main" py={{ base: 10, md: 16 }}>
       <RecordRecentlyViewed
@@ -51,7 +47,7 @@ export default async function PokemonPage({
             <Text
               fontSize="sm"
               textTransform="uppercase"
-              color="gray.500"
+              color="fg.muted"
               mb={2}
             >
               Pokémon #{pokemon.id}
@@ -66,7 +62,7 @@ export default async function PokemonPage({
             </Heading>
             <SimpleGrid columns={2} gap={4}>
               <Box>
-                <Text fontSize="sm" color="gray.500">
+                <Text fontSize="sm" color="fg.muted">
                   Height
                 </Text>
                 <Text fontSize="lg" fontWeight="semibold">
@@ -74,7 +70,7 @@ export default async function PokemonPage({
                 </Text>
               </Box>
               <Box>
-                <Text fontSize="sm" color="gray.500">
+                <Text fontSize="sm" color="fg.muted">
                   Weight
                 </Text>
                 <Text fontSize="lg" fontWeight="semibold">
@@ -85,7 +81,7 @@ export default async function PokemonPage({
             <Box mt={8}>
               <Text
                 fontSize="sm"
-                color="gray.500"
+                color="fg.muted"
                 mb={3}
               >
                 Types
@@ -97,7 +93,7 @@ export default async function PokemonPage({
                     px={4}
                     py={2}
                     borderRadius="full"
-                    bg="gray.100"
+                    bg="bg.muted"
                     textTransform="capitalize"
                     fontWeight="medium"
                   >
