@@ -52,20 +52,20 @@ The goal is not simply to build another Pokédex, but to create a portfolio-qual
 - 📱 Responsive layout
 - 🛡️ TypeScript
 - 🧪 Vitest + React Testing Library
-- ❤️ Legend-State local-state foundation
-- 💾 Local persistence foundation
+- ❤️ Favorites UI with persistence
+- 🕘 Recently Viewed UI with persistence
+- ⚙️ Persistent user preferences (type filter, sort order)
+- 🌙 Theme preference (light/dark/system) with persistence
+- 💾 Legend-State local-first persistence
 - 🔐 Better Auth foundation
 - 🗄️ Prisma database foundation
 - 🔌 tRPC server foundation
 
 ### 🚧 In Progress
 
-- ❤️ Favorites UI
-- 🕘 Recently Viewed UI
-- ⚙️ Persistent user preferences
-- 💾 Persistent type filters
-- 🔀 Persistent sorting
-- 🌙 Theme preference persistence
+- 🌓 Dark mode polish across remaining components
+- 🧭 Navigation for About/Contact pages
+- 🦶 Site-wide footer
 
 ### 🔮 Planned
 
@@ -128,7 +128,7 @@ TanStack Query is responsible for server/API state such as:
 Legend-State is responsible for local-first application state such as:
 
 - Favorites
-- User preferences
+- User preferences (including theme)
 - Recently viewed Pokémon
 - Local persistence
 
@@ -148,6 +148,7 @@ This separation keeps remote data fetching and client state responsibilities cle
 - Lucide React
 - React Icons
 - Tailwind CSS
+- next-themes (color mode)
 
 **Data & State**
 - PokéAPI
@@ -175,6 +176,7 @@ This separation keeps remote data fetching and client state responsibilities cle
 - Prettier
 - Husky
 - Git
+- Greptile (automated PR review)
 
 ---
 
@@ -194,6 +196,7 @@ src/
 │   ├── components/
 │   │   ├── providers.tsx
 │   │   └── ui/
+│   │       └── color-mode.tsx
 │   ├── layout.tsx
 │   ├── not-found.tsx
 │   └── page.tsx
@@ -204,12 +207,17 @@ src/
 ├── features/
 │   ├── favorites/
 │   │   ├── favorites.store.ts
-│   │   └── favorites.persistence.ts
+│   │   ├── favorites.persistence.ts
+│   │   └── FavoriteButton.tsx
 │   ├── preferences/
-│   │   └── preferences.store.ts
+│   │   ├── preferences.store.ts
+│   │   ├── preferences.persistence.ts
+│   │   └── ThemeToggle.tsx
 │   └── recently-viewed/
 │       ├── recently-viewed.store.ts
-│       └── recently-viewed.persistence.ts
+│       ├── recently-viewed.persistence.ts
+│       ├── RecentlyViewedList.tsx
+│       └── RecordRecentlyViewed.tsx
 │
 ├── layout/
 │   ├── Container.tsx
@@ -221,6 +229,7 @@ src/
 │   │   └── usePokemon.ts
 │   ├── pokeapi.ts
 │   ├── pokemon-search.ts
+│   ├── pokemon-types.ts
 │   └── utils.ts
 │
 ├── server/
@@ -402,14 +411,30 @@ Current local-state areas include:
 
 ```
 Legend-State
-├── Favorites
-├── Preferences
-└── Recently Viewed
+├── Favorites (with UI)
+├── Preferences (type filter, sort, theme)
+└── Recently Viewed (with UI)
 ```
+
+Each area has its own store and its own `localStorage`-backed persistence file, following the same pattern throughout the codebase.
 
 The goal is to provide a responsive local-first experience while keeping server/API state separate.
 
 Future versions may synchronize local state with the authenticated backend.
+
+---
+
+## 🌓 Theming
+
+Pokédex Pro supports light, dark, and system-driven color modes, powered by `next-themes` and Chakra UI's semantic color tokens (`fg`, `bg`, `border`, etc.).
+
+The theme selector lives in the Navbar. Selecting a theme:
+
+1. Updates the rendered appearance immediately via `next-themes`.
+2. Persists the choice via `next-themes`' own storage.
+3. Mirrors the choice into the `preferences` Legend-State store, so it stays consistent with the rest of the app's local-state architecture.
+
+When adding new components, prefer semantic tokens (`fg`, `fg.muted`, `bg.panel`, `bg.muted`, `border`) over raw color-scale values (`gray.500`, `white`, etc.) so new UI automatically supports dark mode.
 
 ---
 
@@ -428,7 +453,13 @@ main
  │
  ├── feat/legend-state-favorites
  │
- └── feat/type-filters
+ ├── feat/favorites-ui
+ │
+ ├── feat/recently-viewed-ui
+ │
+ ├── feat/preferences-persistence
+ │
+ └── feat/theme-persistence
 ```
 
 Create a feature branch:
@@ -486,23 +517,26 @@ Open a Pull Request against `main`.
 - [ ] Abilities
 - [ ] Moves
 
-### Phase 4 — Local-First State 🚧
+### Phase 4 — Local-First State ✅
 - [x] Replace TinyBase with Legend-State
 - [x] Favorites store
 - [x] Favorites persistence
+- [x] Favorites UI
 - [x] Preferences store
+- [x] Persistent type filters
+- [x] Persistent sorting
+- [x] Persistent theme preferences
 - [x] Recently Viewed store
 - [x] Recently Viewed persistence
-- [ ] Favorites UI
-- [ ] Recently Viewed UI
-- [ ] Persistent type filters
-- [ ] Persistent sorting
-- [ ] Persistent theme preferences
+- [x] Recently Viewed UI
+- [ ] Grid/list view persistence *(no list-view UI exists yet)*
 
-### Phase 5 — UX & Accessibility
-- [ ] Dark mode improvements
+### Phase 5 — UX & Accessibility 🚧
+- [x] Dark mode support (theme toggle + semantic tokens across the app)
+- [ ] Site-wide footer wired into layout
+- [ ] Navigation links for About/Contact pages
 - [ ] Empty states
-- [ ] Error states
+- [ ] Error states with retry actions
 - [ ] Accessibility improvements
 - [ ] Keyboard navigation
 - [ ] Mobile UX improvements
