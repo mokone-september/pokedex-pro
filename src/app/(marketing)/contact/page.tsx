@@ -1,5 +1,4 @@
 import { Box, Container, Heading, Text } from "@chakra-ui/react";
-
 export default function ContactPage() {
   return (
     <Box as="main" py={{ base: 12, md: 20 }}>
@@ -7,8 +6,7 @@ export default function ContactPage() {
         <Heading as="h1" size="2xl" mb={6}>
           Contact
         </Heading>
-
-        <Text fontSize="lg" color="gray.600">
+        <Text fontSize="lg" color="fg.muted">
           Have a question about Pokédex Pro? Get in touch with us.
         </Text>
       </Container>
