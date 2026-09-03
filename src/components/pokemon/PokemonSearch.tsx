@@ -1,12 +1,9 @@
 "use client";
-
 import { Input } from "@chakra-ui/react";
-
 interface PokemonSearchProps {
   value: string;
   onSearch: (value: string) => void;
 }
-
 export default function PokemonSearch({
   value,
   onSearch,
@@ -18,8 +15,7 @@ export default function PokemonSearch({
       onChange={(e) => onSearch(e.target.value)}
       size="lg"
       borderRadius="xl"
-      bg="white"
-      _dark={{ bg: "gray.800" }}
+      bg="bg.panel"
       focusRing="outside"
       maxW="400px"
     />
