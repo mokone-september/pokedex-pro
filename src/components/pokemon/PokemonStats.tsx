@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Box,
   Heading,
@@ -8,7 +7,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-
 export interface PokemonStat {
   base_stat: number;
   effort: number;
@@ -17,11 +15,9 @@ export interface PokemonStat {
     url: string;
   };
 }
-
 interface PokemonStatsProps {
   stats: PokemonStat[];
 }
-
 const statLabels: Record<string, string> = {
   hp: "HP",
   attack: "Attack",
@@ -30,14 +26,12 @@ const statLabels: Record<string, string> = {
   "special-defense": "Sp. Defense",
   speed: "Speed",
 };
-
 function getColor(value: number) {
   if (value >= 120) return "green";
   if (value >= 90) return "blue";
   if (value >= 60) return "yellow";
   return "red";
 }
-
 export default function PokemonStats({
   stats,
 }: PokemonStatsProps) {
@@ -47,11 +41,8 @@ export default function PokemonStats({
       borderWidth="1px"
       borderRadius="xl"
       p={6}
-      bg="white"
-      _dark={{
-        bg: "gray.800",
-        borderColor: "gray.700",
-      }}
+      bg="bg.panel"
+      borderColor="border"
     >
       <Heading
         size="md"
@@ -59,7 +50,6 @@ export default function PokemonStats({
       >
         Base Stats
       </Heading>
-
       <Stack gap={5}>
         {stats.map(({ stat, base_stat }) => (
           <Box key={stat.name}>
@@ -70,7 +60,6 @@ export default function PokemonStats({
               >
                 {statLabels[stat.name] ?? stat.name}
               </Text>
-
               <Text
                 fontWeight="bold"
                 color={`${getColor(base_stat)}.500`}
@@ -78,7 +67,6 @@ export default function PokemonStats({
                 {base_stat}
               </Text>
             </HStack>
-
             <Progress.Root
               value={base_stat}
               max={255}

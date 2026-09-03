@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Box,
   Card,
@@ -8,11 +7,9 @@ import {
   SkeletonCircle,
   Stack,
 } from "@chakra-ui/react";
-
 interface PokemonSkeletonProps {
   count?: number;
 }
-
 export default function PokemonSkeleton({
   count = 10,
 }: PokemonSkeletonProps) {
@@ -24,30 +21,24 @@ export default function PokemonSkeleton({
           borderRadius="2xl"
           overflow="hidden"
           borderWidth="1px"
-          bg="white"
-          _dark={{
-            bg: "gray.800",
-            borderColor: "gray.700",
-          }}
+          bg="bg.panel"
+          borderColor="border"
         >
           <Card.Body p={6}>
             <Stack align="center" gap={5}>
               {/* Pokémon Image */}
               <SkeletonCircle size="40" />
-
               {/* Pokédex Number */}
               <Skeleton
                 height="22px"
                 width="70px"
                 borderRadius="full"
               />
-
               {/* Pokémon Name */}
               <Skeleton
                 height="28px"
                 width="140px"
               />
-
               {/* Type Badges */}
               <HStack gap={2}>
                 <Skeleton
@@ -61,7 +52,6 @@ export default function PokemonSkeleton({
                   borderRadius="full"
                 />
               </HStack>
-
               {/* Divider */}
               <Box
                 w="full"
