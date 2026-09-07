@@ -12,7 +12,6 @@ import PokemonFilters from "~/components/pokemon/PokemonFilters";
 import PokemonGrid from "~/components/pokemon/PokemonGrid";
 import PokemonSkeleton from "~/components/pokemon/PokemonSkeleton";
 import Container from "~/layout/Container";
-import Navbar from "~/layout/Navbar";
 import { RecentlyViewedList } from "~/features/recently-viewed/RecentlyViewedList";
 import {
   preferences$,
@@ -35,10 +34,6 @@ const DISPLAY_LIMIT = 24;
 export default function HomePage() {
   const [search, setSearch] = useState("");
 
-  // type and sort are persisted preferences: read reactively from the
-  // store so this component re-renders when they change (including on
-  // rehydration from localStorage), and write through the store's own
-  // setters so the persistence layer picks up every change.
   const type = useValue(() => preferences$.preferredPokemonType.get());
   const sort = useValue(() => preferences$.sort.get());
 
@@ -91,51 +86,48 @@ export default function HomePage() {
   const error = listError ?? typeError;
 
   return (
-    <>
-      <Navbar />
-      <Box as="main" py={8}>
-        <Container>
-          <Heading size="2xl" mb={2}>
-            Pokédex Pro
-          </Heading>
-          <Text color="fg.muted" mb={8}>
-            Search Pokémon by name, filter by type, and explore the full
-            Pokédex.
-          </Text>
+    <Box as="main" py={8}>
+      <Container>
+        <Heading size="2xl" mb={2}>
+          Pokédex Pro
+        </Heading>
+        <Text color="fg.muted" mb={8}>
+          Search Pokémon by name, filter by type, and explore the full
+          Pokédex.
+        </Text>
 
-          <RecentlyViewedList />
+        <RecentlyViewedList />
 
-          <PokemonFilters
-            search={search}
-            onSearchChange={setSearch}
-            type={type}
-            onTypeChange={setPreferredPokemonType}
-            sort={sort}
-            onSortChange={setSort}
-          />
-          {error ? (
-            <Text color="red.500">Something went wrong loading Pokémon.</Text>
-          ) : isLoading ? (
-            <SimpleGrid
-              columns={{
-                base: 1,
-                sm: 2,
-                md: 3,
-                lg: 4,
-                xl: 5,
-              }}
-              gap={6}
-              w="full"
-            >
-              <PokemonSkeleton count={8} />
-            </SimpleGrid>
-          ) : pokemon.length === 0 ? (
-            <Text color="fg.muted">No Pokémon match your search.</Text>
-          ) : (
-            <PokemonGrid pokemon={pokemon} />
-          )}
-        </Container>
-      </Box>
-    </>
+        <PokemonFilters
+          search={search}
+          onSearchChange={setSearch}
+          type={type}
+          onTypeChange={setPreferredPokemonType}
+          sort={sort}
+          onSortChange={setSort}
+        />
+        {error ? (
+          <Text color="red.500">Something went wrong loading Pokémon.</Text>
+        ) : isLoading ? (
+          <SimpleGrid
+            columns={{
+              base: 1,
+              sm: 2,
+              md: 3,
+              lg: 4,
+              xl: 5,
+            }}
+            gap={6}
+            w="full"
+          >
+            <PokemonSkeleton count={8} />
+          </SimpleGrid>
+        ) : pokemon.length === 0 ? (
+          <Text color="fg.muted">No Pokémon match your search.</Text>
+        ) : (
+          <PokemonGrid pokemon={pokemon} />
+        )}
+      </Container>
+    </Box>
   );
 }
