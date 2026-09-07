@@ -9,7 +9,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ThemeToggle } from "~/features/preferences/ThemeToggle";
-
 export default function Navbar() {
   return (
     <Box
@@ -61,6 +60,32 @@ export default function Navbar() {
             >
               <NextLink href="/pokemon">
                 Pokémon
+              </NextLink>
+            </Link>
+            <Link
+              asChild
+              color="fg.muted"
+              fontWeight="medium"
+              _hover={{
+                color: "blue.600",
+                textDecoration: "none",
+              }}
+            >
+              <NextLink href="/about">
+                About
+              </NextLink>
+            </Link>
+            <Link
+              asChild
+              color="fg.muted"
+              fontWeight="medium"
+              _hover={{
+                color: "blue.600",
+                textDecoration: "none",
+              }}
+            >
+              <NextLink href="/contact">
+                Contact
               </NextLink>
             </Link>
             <ThemeToggle />

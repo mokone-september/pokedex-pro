@@ -1,8 +1,9 @@
 import "~/styles/globals.css";
-
 import type { Metadata } from "next";
-
+import { Box } from "@chakra-ui/react";
 import { Providers } from "~/app/components/providers";
+import Navbar from "~/layout/Navbar";
+import Footer from "~/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Pokédex Pro",
@@ -20,7 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Box display="flex" flexDirection="column" minH="100dvh">
+            <Navbar />
+            <Box flex="1">{children}</Box>
+            <Footer />
+          </Box>
+        </Providers>
       </body>
     </html>
   );
