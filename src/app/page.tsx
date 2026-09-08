@@ -11,6 +11,7 @@ import { useValue } from "@legendapp/state/react";
 import PokemonFilters from "~/components/pokemon/PokemonFilters";
 import PokemonGrid from "~/components/pokemon/PokemonGrid";
 import PokemonSkeleton from "~/components/pokemon/PokemonSkeleton";
+import ErrorState from "~/components/pokemon/ErrorState";
 import Container from "~/layout/Container";
 import { RecentlyViewedList } from "~/features/recently-viewed/RecentlyViewedList";
 import {
@@ -41,11 +42,13 @@ export default function HomePage() {
     data: pokemonList,
     isLoading: isListLoading,
     error: listError,
+    refetch: refetchList,
   } = usePokemonList();
   const {
     data: typeData,
     isLoading: isTypeLoading,
     error: typeError,
+    refetch: refetchType,
   } = usePokemonByType(type);
 
   const sourceList = useMemo(() => {
@@ -84,6 +87,19 @@ export default function HomePage() {
     detailQueries.some((query) => query.isLoading);
 
   const error = listError ?? typeError;
+  const detailsFailed = detailQueries.some((query) => query.isError);
+
+  function handleRetry(): void {
+    void refetchList();
+    if (type !== "all") {
+      void refetchType();
+    }
+    detailQueries.forEach((query) => {
+      if (query.isError) {
+        void query.refetch();
+      }
+    });
+  }
 
   return (
     <Box as="main" py={8}>
@@ -106,8 +122,8 @@ export default function HomePage() {
           sort={sort}
           onSortChange={setSort}
         />
-        {error ? (
-          <Text color="red.500">Something went wrong loading Pokémon.</Text>
+        {error || detailsFailed ? (
+          <ErrorState onRetry={handleRetry} />
         ) : isLoading ? (
           <SimpleGrid
             columns={{
