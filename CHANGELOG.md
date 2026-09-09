@@ -11,6 +11,25 @@ and this project follows Semantic Versioning.
 
 ---
 
+## [0.4.0] - 2026-09-08
+### Added
+- `ErrorState` component: a reusable card with a message and a "Try again" button, styled with the app's semantic color tokens
+- Homepage retry handling: retries whichever query actually failed — the Pokémon list, the type-filtered list, or any individual Pokémon detail fetch (previously, a failed detail fetch could silently show fewer cards with no visible error at all)
+- `error.tsx` route-level error boundary for the Pokémon detail page, using Next.js's built-in convention, reusing the same `ErrorState` component
+- "About" and "Contact" links added to the Navbar
+
+### Changed
+- `Navbar` and `Footer` moved into the root layout (`src/app/layout.tsx`) so both render consistently on every page instead of only the homepage; removed the now-duplicate inline `<Navbar />` from `HomePage`
+- `PokemonSearch`, `PokemonSkeleton`, and `PokemonStats` converted from manual `_dark={{...}}` overrides to the same semantic-token convention (`bg.panel`, `border`) used everywhere else in the app
+- Navbar's "Pokémon" link now points to `/` instead of the nonexistent `/pokemon` route
+
+### Fixed
+- **Favorites, preferences, and recently-viewed persistence never actually ran.** Each persistence module correctly called `syncObservable(...)`, but none of the three files were ever imported anywhere in the app, so that side effect never executed — all three stores silently reset on every page reload despite appearing to work within a single session. Fixed by importing all three persistence modules in `providers.tsx`. Caught by Greptile review; verified by manually reproducing the bug (favorite a Pokémon, hard-refresh, watch it reset) both before and after the fix.
+- `Footer` was a fully built, tested component that was never actually rendered anywhere in the app.
+- `/about` and `/contact` pages existed and rendered correctly, but had no navigation link pointing to them.
+
+---
+
 ## [0.3.0] - 2026-09-02
 ### Added
 - Favorites UI: heart toggle on Pokémon cards, backed by a centralized `toggleFavorite` in the favorites store

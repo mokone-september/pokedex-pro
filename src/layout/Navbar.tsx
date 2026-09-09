@@ -58,7 +58,7 @@ export default function Navbar() {
                 textDecoration: "none",
               }}
             >
-              <NextLink href="/pokemon">
+              <NextLink href="/">
                 Pokémon
               </NextLink>
             </Link>

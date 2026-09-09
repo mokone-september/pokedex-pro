@@ -52,20 +52,23 @@ The goal is not simply to build another Pokédex, but to create a portfolio-qual
 - 📱 Responsive layout
 - 🛡️ TypeScript
 - 🧪 Vitest + React Testing Library
-- ❤️ Favorites UI with persistence
-- 🕘 Recently Viewed UI with persistence
-- ⚙️ Persistent user preferences (type filter, sort order)
-- 🌙 Theme preference (light/dark/system) with persistence
+- ❤️ Favorites UI with working persistence
+- 🕘 Recently Viewed UI with working persistence
+- ⚙️ Persistent user preferences (type filter, sort order) with working persistence
+- 🌙 Theme preference (light/dark/system) with working persistence
 - 💾 Legend-State local-first persistence
+- 🌓 Dark mode support across the entire app (semantic color tokens throughout)
+- 🧭 Navbar and Footer rendered consistently on every page, with Home/Pokémon/About/Contact navigation
+- 🔁 Error states with retry actions, on both the homepage and the Pokémon detail page
 - 🔐 Better Auth foundation
 - 🗄️ Prisma database foundation
 - 🔌 tRPC server foundation
 
 ### 🚧 In Progress
 
-- 🌓 Dark mode polish across remaining components
-- 🧭 Navigation for About/Contact pages
-- 🦶 Site-wide footer
+- 🗂️ Empty-state polish (search-with-no-results messaging)
+- ♿ Accessibility pass
+- ⌨️ Keyboard navigation
 
 ### 🔮 Planned
 
@@ -76,10 +79,10 @@ The goal is not simply to build another Pokédex, but to create a portfolio-qual
 - 🔄 Local-to-server synchronization
 - 👤 User-specific favorites
 - 📱 Improved mobile experience
-- ♿ Accessibility improvements
 - ⚡ Performance optimization
 - 📊 Advanced Pokémon statistics
 - 🚀 Production deployment
+- 🧭 Dedicated `/pokemon` listing route (the Navbar's "Pokémon" link currently points to the homepage, since all browsing lives there today)
 
 ---
 
@@ -121,7 +124,7 @@ TanStack Query is responsible for server/API state such as:
 - Pokémon details
 - API caching
 - Request lifecycle
-- Loading and error states
+- Loading and error states (with user-triggered retry)
 
 ### Client / Local State
 
@@ -131,6 +134,8 @@ Legend-State is responsible for local-first application state such as:
 - User preferences (including theme)
 - Recently viewed Pokémon
 - Local persistence
+
+Every local-state area follows the same pattern: a `*.store.ts` file defining the observable and its setters, and a `*.persistence.ts` file that calls `syncObservable(...)` to back it with `localStorage`. Persistence files must be imported somewhere the app actually loads (currently `src/app/components/providers.tsx`) — importing a persistence file only for its side effect is easy to forget, so double-check this when adding a new local-state area.
 
 This separation keeps remote data fetching and client state responsibilities clearly defined.
 
@@ -193,6 +198,8 @@ src/
 │   │   └── trpc/
 │   ├── pokemon/
 │   │   └── [name]/
+│   │       ├── page.tsx
+│   │       └── error.tsx
 │   ├── components/
 │   │   ├── providers.tsx
 │   │   └── ui/
@@ -203,6 +210,7 @@ src/
 │
 ├── components/
 │   └── pokemon/
+│       └── ErrorState.tsx
 │
 ├── features/
 │   ├── favorites/
@@ -411,9 +419,9 @@ Current local-state areas include:
 
 ```
 Legend-State
-├── Favorites (with UI)
-├── Preferences (type filter, sort, theme)
-└── Recently Viewed (with UI)
+├── Favorites (with UI, verified persisting across reloads)
+├── Preferences (type filter, sort, theme — verified persisting across reloads)
+└── Recently Viewed (with UI, verified persisting across reloads)
 ```
 
 Each area has its own store and its own `localStorage`-backed persistence file, following the same pattern throughout the codebase.
@@ -438,6 +446,17 @@ When adding new components, prefer semantic tokens (`fg`, `fg.muted`, `bg.panel`
 
 ---
 
+## 🔁 Error Handling
+
+Failed data fetches show an `ErrorState` card (message + a "Try again" button) instead of leaving the user stuck:
+
+- **Homepage**: retries whichever TanStack Query call actually failed — the Pokémon list, the type-filtered list, or any individual Pokémon detail fetch.
+- **Pokémon detail page**: uses Next.js's route-level `error.tsx` convention, since that page fetches data server-side. The provided `reset()` function re-runs the failed server render.
+
+Both surfaces reuse the same `ErrorState` component for a consistent look.
+
+---
+
 ## 📦 Git Workflow
 
 This project follows a feature-branch workflow.
@@ -459,7 +478,13 @@ main
  │
  ├── feat/preferences-persistence
  │
- └── feat/theme-persistence
+ ├── feat/theme-persistence
+ │
+ ├── fix/wire-up-persistence
+ │
+ ├── fix/wire-up-nav-and-footer
+ │
+ └── feat/error-state-retry
 ```
 
 Create a feature branch:
@@ -520,23 +545,23 @@ Open a Pull Request against `main`.
 ### Phase 4 — Local-First State ✅
 - [x] Replace TinyBase with Legend-State
 - [x] Favorites store
-- [x] Favorites persistence
+- [x] Favorites persistence *(verified working — persistence module is imported and actually runs)*
 - [x] Favorites UI
 - [x] Preferences store
-- [x] Persistent type filters
-- [x] Persistent sorting
-- [x] Persistent theme preferences
+- [x] Persistent type filters *(verified working)*
+- [x] Persistent sorting *(verified working)*
+- [x] Persistent theme preferences *(verified working)*
 - [x] Recently Viewed store
-- [x] Recently Viewed persistence
+- [x] Recently Viewed persistence *(verified working)*
 - [x] Recently Viewed UI
 - [ ] Grid/list view persistence *(no list-view UI exists yet)*
 
 ### Phase 5 — UX & Accessibility 🚧
-- [x] Dark mode support (theme toggle + semantic tokens across the app)
-- [ ] Site-wide footer wired into layout
-- [ ] Navigation links for About/Contact pages
-- [ ] Empty states
-- [ ] Error states with retry actions
+- [x] Dark mode support (theme toggle + semantic tokens across the entire app, including previously-missed components)
+- [x] Site-wide footer wired into layout
+- [x] Navigation links for About/Contact pages
+- [x] Error states with retry actions (homepage + Pokémon detail page)
+- [ ] Empty states *(basic "no results" text exists; could be more helpful)*
 - [ ] Accessibility improvements
 - [ ] Keyboard navigation
 - [ ] Mobile UX improvements
@@ -610,6 +635,7 @@ Before opening a Pull Request, make sure:
 - ✅ No secrets are committed
 - ✅ Documentation is updated when necessary
 - ✅ Changes are focused
+- ✅ If you claim something "persists" or "works," verify it manually (reload the page, check the actual behavior) before merging — don't rely on the code merely existing
 
 ---
 
