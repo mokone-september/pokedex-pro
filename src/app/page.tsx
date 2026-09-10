@@ -12,6 +12,7 @@ import PokemonFilters from "~/components/pokemon/PokemonFilters";
 import PokemonGrid from "~/components/pokemon/PokemonGrid";
 import PokemonSkeleton from "~/components/pokemon/PokemonSkeleton";
 import ErrorState from "~/components/pokemon/ErrorState";
+import EmptyState from "~/components/pokemon/EmptyState";
 import Container from "~/layout/Container";
 import { RecentlyViewedList } from "~/features/recently-viewed/RecentlyViewedList";
 import {
@@ -89,6 +90,9 @@ export default function HomePage() {
   const error = listError ?? typeError;
   const detailsFailed = detailQueries.some((query) => query.isError);
 
+  const hasActiveFilters =
+    search.trim() !== "" || type !== "all" || sort !== "asc";
+
   function handleRetry(): void {
     void refetchList();
     if (type !== "all") {
@@ -99,6 +103,12 @@ export default function HomePage() {
         void query.refetch();
       }
     });
+  }
+
+  function handleClearFilters(): void {
+    setSearch("");
+    setPreferredPokemonType("all");
+    setSort("asc");
   }
 
   return (
@@ -139,7 +149,15 @@ export default function HomePage() {
             <PokemonSkeleton count={8} />
           </SimpleGrid>
         ) : pokemon.length === 0 ? (
-          <Text color="fg.muted">No Pokémon match your search.</Text>
+          <EmptyState
+            message={
+              hasActiveFilters
+                ? "No Pokémon match your search or filters."
+                : "No Pokémon found."
+            }
+            actionLabel={hasActiveFilters ? "Clear filters" : undefined}
+            onAction={hasActiveFilters ? handleClearFilters : undefined}
+          />
         ) : (
           <PokemonGrid pokemon={pokemon} />
         )}
