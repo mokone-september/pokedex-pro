@@ -6,6 +6,7 @@ import {
   Heading,
   SimpleGrid,
   Text,
+  VisuallyHidden,
 } from "@chakra-ui/react";
 import { useValue } from "@legendapp/state/react";
 import PokemonFilters from "~/components/pokemon/PokemonFilters";
@@ -114,7 +115,7 @@ export default function HomePage() {
   return (
     <Box as="main" py={8}>
       <Container>
-        <Heading size="2xl" mb={2}>
+        <Heading as="h1" size="2xl" mb={2}>
           Pokédex Pro
         </Heading>
         <Text color="fg.muted" mb={8}>
@@ -132,35 +133,49 @@ export default function HomePage() {
           sort={sort}
           onSortChange={setSort}
         />
-        {error || detailsFailed ? (
-          <ErrorState onRetry={handleRetry} />
-        ) : isLoading ? (
-          <SimpleGrid
-            columns={{
-              base: 1,
-              sm: 2,
-              md: 3,
-              lg: 4,
-              xl: 5,
-            }}
-            gap={6}
-            w="full"
-          >
-            <PokemonSkeleton count={8} />
-          </SimpleGrid>
-        ) : pokemon.length === 0 ? (
-          <EmptyState
-            message={
-              hasActiveFilters
-                ? "No Pokémon match your search or filters."
-                : "No Pokémon found."
-            }
-            actionLabel={hasActiveFilters ? "Clear filters" : undefined}
-            onAction={hasActiveFilters ? handleClearFilters : undefined}
-          />
-        ) : (
-          <PokemonGrid pokemon={pokemon} />
-        )}
+
+        {/* aria-live announces loading/error/empty/result-count changes
+            to screen reader users without requiring them to navigate
+            to this region manually. */}
+        <Box aria-live="polite" aria-atomic="true">
+          {error || detailsFailed ? (
+            <ErrorState onRetry={handleRetry} />
+          ) : isLoading ? (
+            <>
+              <VisuallyHidden>Loading Pokémon…</VisuallyHidden>
+              <SimpleGrid
+                columns={{
+                  base: 1,
+                  sm: 2,
+                  md: 3,
+                  lg: 4,
+                  xl: 5,
+                }}
+                gap={6}
+                w="full"
+              >
+                <PokemonSkeleton count={8} />
+              </SimpleGrid>
+            </>
+          ) : pokemon.length === 0 ? (
+            <EmptyState
+              message={
+                hasActiveFilters
+                  ? "No Pokémon match your search or filters."
+                  : "No Pokémon found."
+              }
+              actionLabel={hasActiveFilters ? "Clear filters" : undefined}
+              onAction={hasActiveFilters ? handleClearFilters : undefined}
+            />
+          ) : (
+            <>
+              <VisuallyHidden>
+                {pokemon.length} Pokémon found.
+              </VisuallyHidden>
+              <PokemonGrid pokemon={pokemon} />
+            </>
+          )}
+        </Box>
       </Container>
     </Box>
   );
