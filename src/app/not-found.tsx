@@ -12,7 +12,9 @@ export default function NotFound() {
           height={40}
           priority
         />
-        <Heading size="2xl">404</Heading>
+        <Heading as="h1" size="2xl">
+          404
+        </Heading>
         <Text color="fg.muted">
           Sorry, this page could not be found.
         </Text>
