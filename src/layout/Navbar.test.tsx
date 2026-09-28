@@ -45,4 +45,14 @@ describe("Navbar", () => {
       }),
     ).toBeInTheDocument();
   });
+
+  it("renders the mobile navigation menu trigger", () => {
+    render(<Navbar />);
+
+    expect(
+      screen.getByRole("button", {
+        name: "Open navigation menu",
+      }),
+    ).toBeInTheDocument();
+  });
 });
