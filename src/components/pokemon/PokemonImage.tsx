@@ -25,6 +25,7 @@ export default function PokemonImage({ src, alt }: PokemonImageProps) {
     <Image
       src={resolvedSrc}
       alt={alt}
+      loading="lazy"
       onError={() => setHasError(true)}
       boxSize="120px"
       objectFit="contain"
