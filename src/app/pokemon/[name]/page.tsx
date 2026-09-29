@@ -11,6 +11,7 @@ import { RecordRecentlyViewed } from "~/features/recently-viewed/RecordRecentlyV
 import EvolutionChainSection, {
   EvolutionChainSkeleton,
 } from "~/components/pokemon/EvolutionChainSection";
+import PokemonAbilities from "~/components/pokemon/PokemonAbilities";
 interface PokemonPageProps {
   params: Promise<{
     name: string;
@@ -107,6 +108,14 @@ export default async function PokemonPage({
             </Box>
           </Box>
         </SimpleGrid>
+        <Box mt={10}>
+          <PokemonAbilities
+            abilities={pokemon.abilities.map(({ ability, is_hidden }) => ({
+              name: ability.name,
+              isHidden: is_hidden,
+            }))}
+          />
+        </Box>
         <Box mt={10}>
           <Suspense fallback={<EvolutionChainSkeleton />}>
             <EvolutionChainSection name={pokemon.name} />
