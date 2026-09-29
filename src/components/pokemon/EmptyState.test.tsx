@@ -4,16 +4,26 @@ import { render, screen } from "../../test-utils/render";
 import EmptyState from "./EmptyState";
 
 describe("EmptyState", () => {
-  it("renders the default message", () => {
+  it("renders a helpful default title and message", () => {
     render(<EmptyState />);
+
     expect(
-      screen.getByText("No Pokémon match your search."),
+      screen.getByRole("heading", { name: "No Pokémon found" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Try adjusting your search or filters to find a Pokémon.",
+      ),
     ).toBeInTheDocument();
   });
 
   it("renders a custom message when provided", () => {
-    render(<EmptyState message="Nothing here" />);
-    expect(screen.getByText("Nothing here")).toBeInTheDocument();
+    render(<EmptyState title="Nothing here" message="Try another search" />);
+
+    expect(
+      screen.getByRole("heading", { name: "Nothing here" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Try another search")).toBeInTheDocument();
   });
 
   it("does not render an action button when none is provided", () => {

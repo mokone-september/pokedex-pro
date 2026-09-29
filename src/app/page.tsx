@@ -159,10 +159,13 @@ export default function HomePage() {
             </>
           ) : pokemon.length === 0 ? (
             <EmptyState
+              title={
+                hasActiveFilters ? "No matching Pokémon" : "No Pokémon found"
+              }
               message={
                 hasActiveFilters
-                  ? "No Pokémon match your search or filters."
-                  : "No Pokémon found."
+                  ? "Try a different search or clear your filters to see all Pokémon."
+                  : "The Pokédex could not find any Pokémon right now."
               }
               actionLabel={hasActiveFilters ? "Clear filters" : undefined}
               onAction={hasActiveFilters ? handleClearFilters : undefined}
