@@ -1,16 +1,18 @@
 "use client";
 
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Text } from "@chakra-ui/react";
 import { SearchX } from "lucide-react";
 
 interface EmptyStateProps {
+  title?: string;
   message?: string;
   actionLabel?: string;
   onAction?: () => void;
 }
 
 export default function EmptyState({
-  message = "No Pokémon match your search.",
+  title = "No Pokémon found",
+  message = "Try adjusting your search or filters to find a Pokémon.",
   actionLabel,
   onAction,
 }: EmptyStateProps) {
@@ -26,6 +28,9 @@ export default function EmptyState({
       <Box display="flex" justifyContent="center" mb={3} color="fg.muted">
         <SearchX size={32} />
       </Box>
+      <Heading as="h2" size="md" mb={2}>
+        {title}
+      </Heading>
       <Text color="fg.muted" mb={onAction ? 4 : 0}>
         {message}
       </Text>
