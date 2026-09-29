@@ -24,6 +24,10 @@ export interface Pokemon {
       name: string;
     };
   }[];
+  abilities: {
+    is_hidden: boolean;
+    ability: { name: string };
+  }[];
 }
 
 export interface TypeResponse {
