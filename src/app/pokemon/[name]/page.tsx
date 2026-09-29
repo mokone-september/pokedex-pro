@@ -8,6 +8,9 @@ import {
 } from "@chakra-ui/react";
 import { getPokemon } from "~/lib/pokeapi";
 import { RecordRecentlyViewed } from "~/features/recently-viewed/RecordRecentlyViewed";
+import EvolutionChainSection, {
+  EvolutionChainSkeleton,
+} from "~/components/pokemon/EvolutionChainSection";
 interface PokemonPageProps {
   params: Promise<{
     name: string;
@@ -104,7 +107,13 @@ export default async function PokemonPage({
             </Box>
           </Box>
         </SimpleGrid>
+        <Box mt={10}>
+          <Suspense fallback={<EvolutionChainSkeleton />}>
+            <EvolutionChainSection name={pokemon.name} />
+          </Suspense>
+        </Box>
       </Container>
     </Box>
   );
 }
+import { Suspense } from "react";
