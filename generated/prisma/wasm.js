@@ -181,7 +181,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/thabiso/pokedex-pro/generated/prisma",
+      "value": "/home/thabiso/pokedex-pro.worktrees/featposthog-analytics-integration/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -195,12 +195,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/thabiso/pokedex-pro/prisma/schema.prisma",
+    "sourceFilePath": "/home/thabiso/pokedex-pro.worktrees/featposthog-analytics-integration/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.19.3",

@@ -1,7 +1,21 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, screen } from "../../test-utils/render";
 import { render } from "../../test-utils/render";
+import {
+  trackPokemonSearched,
+  trackPokemonTypeFiltered,
+} from "~/lib/analytics";
 import PokemonFilters from "./PokemonFilters";
+
+vi.mock("~/lib/analytics", () => ({
+  trackPokemonSearched: vi.fn(),
+  trackPokemonTypeFiltered: vi.fn(),
+}));
+
+afterEach(() => {
+  vi.useRealTimers();
+  vi.clearAllMocks();
+});
 
 describe("PokemonFilters", () => {
   const defaultProps = {
@@ -111,6 +125,28 @@ describe("PokemonFilters", () => {
     );
   });
 
+  it("tracks a debounced search without sending the query text", () => {
+    vi.useFakeTimers();
+    const onSearchChange = vi.fn();
+    render(
+      <PokemonFilters
+        {...defaultProps}
+        onSearchChange={onSearchChange}
+      />,
+    );
+    const input = screen.getByPlaceholderText("Search Pokémon...");
+
+    fireEvent.change(input, { target: { value: "  pikachu " } });
+    expect(trackPokemonSearched).not.toHaveBeenCalled();
+    fireEvent.change(input, { target: { value: "  pikachu  " } });
+
+    vi.advanceTimersByTime(500);
+
+    expect(trackPokemonSearched).toHaveBeenCalledTimes(1);
+    expect(trackPokemonSearched).toHaveBeenCalledWith(7);
+    expect(trackPokemonSearched).not.toHaveBeenCalledWith("pikachu");
+  });
+
   it("calls onTypeChange when changing type", () => {
     const onTypeChange = vi.fn();
     render(
@@ -128,6 +164,7 @@ describe("PokemonFilters", () => {
       },
     });
     expect(onTypeChange).toHaveBeenCalledWith("fire");
+    expect(trackPokemonTypeFiltered).toHaveBeenCalledWith("fire");
   });
 
   it("calls onSortChange when changing sort order", () => {
