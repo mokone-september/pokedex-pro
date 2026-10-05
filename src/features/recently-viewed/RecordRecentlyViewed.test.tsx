@@ -1,13 +1,19 @@
 import { render } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { trackPokemonViewed } from "~/lib/analytics";
 import { RecordRecentlyViewed } from "./RecordRecentlyViewed";
 import { clearRecentlyViewed, getRecentlyViewed } from "./recently-viewed.store";
+
+vi.mock("~/lib/analytics", () => ({
+  trackPokemonViewed: vi.fn(),
+}));
 
 const pikachu = { id: 25, name: "pikachu", image: "/pikachu.png" };
 const bulbasaur = { id: 1, name: "bulbasaur", image: null };
 
 beforeEach(() => {
   clearRecentlyViewed();
+  vi.clearAllMocks();
 });
 
 describe("RecordRecentlyViewed", () => {
@@ -23,6 +29,7 @@ describe("RecordRecentlyViewed", () => {
     const items = getRecentlyViewed();
     expect(items).toHaveLength(1);
     expect(items[0]).toMatchObject(pikachu);
+    expect(trackPokemonViewed).toHaveBeenCalledWith(pikachu);
   });
 
   it("records the new pokemon when the viewed id changes", () => {
@@ -36,6 +43,8 @@ describe("RecordRecentlyViewed", () => {
       bulbasaur.id,
       pikachu.id,
     ]);
+    expect(trackPokemonViewed).toHaveBeenNthCalledWith(1, pikachu);
+    expect(trackPokemonViewed).toHaveBeenNthCalledWith(2, bulbasaur);
   });
 
   it("does not double-record on a re-render with the same id", () => {
@@ -45,5 +54,6 @@ describe("RecordRecentlyViewed", () => {
     rerender(<RecordRecentlyViewed pokemon={{ ...pikachu }} />);
 
     expect(getRecentlyViewed()).toHaveLength(1);
+    expect(trackPokemonViewed).toHaveBeenCalledTimes(1);
   });
 });

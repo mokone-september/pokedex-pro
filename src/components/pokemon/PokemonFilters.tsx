@@ -1,11 +1,13 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import {
   Box,
   HStack,
   Input,
   NativeSelect,
 } from "@chakra-ui/react";
+import { trackPokemonSearched, trackPokemonTypeFiltered } from "~/lib/analytics";
 import { POKEMON_TYPES, type PokemonTypeValue } from "~/lib/pokemon-types";
 
 export type SortValue = "asc" | "desc";
@@ -32,6 +34,41 @@ export default function PokemonFilters({
   sort,
   onSortChange,
 }: PokemonFiltersProps) {
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (searchTimer.current) {
+        clearTimeout(searchTimer.current);
+      }
+    },
+    [],
+  );
+
+  function handleSearchChange(value: string): void {
+    onSearchChange(value);
+    if (searchTimer.current) {
+      clearTimeout(searchTimer.current);
+      searchTimer.current = null;
+    }
+
+    const queryLength = value.trim().length;
+    if (queryLength > 0) {
+      searchTimer.current = setTimeout(() => {
+        trackPokemonSearched(queryLength);
+        searchTimer.current = null;
+      }, 500);
+    }
+  }
+
+  function handleTypeChange(value: PokemonTypeValue): void {
+    if (value === type) {
+      return;
+    }
+    onTypeChange(value);
+    trackPokemonTypeFiltered(value);
+  }
+
   return (
     <Box mb={6}>
       <HStack
@@ -43,9 +80,7 @@ export default function PokemonFilters({
           aria-label="Search Pokémon"
           placeholder="Search Pokémon..."
           value={search}
-          onChange={(event) =>
-            onSearchChange(event.target.value)
-          }
+          onChange={(event) => handleSearchChange(event.target.value)}
           maxW="320px"
         />
         <NativeSelect.Root width="220px">
@@ -53,7 +88,7 @@ export default function PokemonFilters({
             aria-label="Filter by type"
             value={type}
             onChange={(event) =>
-              onTypeChange(event.target.value as PokemonTypeValue)
+              handleTypeChange(event.target.value as PokemonTypeValue)
             }
           >
             {POKEMON_TYPES.map((item) => (
