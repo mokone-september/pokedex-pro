@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { trackPokemonViewed } from "~/lib/analytics";
 import { addRecentlyViewed } from "./recently-viewed.store";
 
 export interface RecordRecentlyViewedProps {
@@ -20,8 +21,14 @@ export interface RecordRecentlyViewedProps {
 export function RecordRecentlyViewed({
   pokemon,
 }: RecordRecentlyViewedProps) {
+  const lastTrackedPokemonId = useRef<number | null>(null);
+
   useEffect(() => {
     addRecentlyViewed(pokemon);
+    if (lastTrackedPokemonId.current !== pokemon.id) {
+      trackPokemonViewed(pokemon);
+      lastTrackedPokemonId.current = pokemon.id;
+    }
     // Only re-record if the viewed pokemon's identity actually
     // changes (e.g. navigating from one detail page to another
     // without a full remount).
