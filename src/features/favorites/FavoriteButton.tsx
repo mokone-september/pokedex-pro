@@ -3,6 +3,10 @@
 import { IconButton } from "@chakra-ui/react";
 import { useValue } from "@legendapp/state/react";
 import { Heart } from "lucide-react";
+import {
+  trackPokemonFavorited,
+  trackPokemonUnfavorited,
+} from "~/lib/analytics";
 import { isFavorite, toggleFavorite } from "./favorites.store";
 
 export interface FavoriteButtonProps {
@@ -17,6 +21,11 @@ export function FavoriteButton({ pokemon }: FavoriteButtonProps) {
   const favorite = useValue(() => isFavorite(pokemon.id));
 
   function handleToggle(): void {
+    if (favorite) {
+      trackPokemonUnfavorited(pokemon);
+    } else {
+      trackPokemonFavorited(pokemon);
+    }
     toggleFavorite(pokemon);
   }
 
