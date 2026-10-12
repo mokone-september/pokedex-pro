@@ -26,16 +26,17 @@ The project focuses on clean architecture, responsive UX, accessible interaction
 ### 🎨 UI & UX
 
 * Chakra UI component system
-* Responsive layouts
+* Responsive mobile layouts
 * Dark mode support
 * Persistent theme preference
 * Responsive navigation
 * Site-wide footer
 * Loading states
 * Error states with retry functionality
-* Empty-state messaging
+* Polished empty-state messaging
 * Consistent spacing and typography
 * Lucide and React Icons
+* Memoized filtering and lazy-loaded Pokémon images
 
 ### ♿ Accessibility
 
@@ -74,28 +75,9 @@ These features are being developed incrementally rather than treated as complete
 
 ---
 
-## 🚧 In Progress
-
-* 🗂️ Empty-state polish
-* ⌨️ Keyboard navigation
-* 📱 Mobile UX improvements
-* ⚡ Performance optimization
-
----
-
 ## 🗺️ Planned
 
-* 🧬 Pokémon evolution chains
-* ⚡ Abilities
-* ⚔️ Moves
-* 📡 Improved offline support
-* 🔄 Local-to-server state synchronization
-* ❤️ User-specific favorites
-* 📱 Mobile UX improvements
-* ⚡ Performance optimization
-* 📊 Advanced Pokémon statistics
-* 🚀 Production deployment improvements
-* 🗂️ Dedicated `/pokemon` browsing route
+The remaining application foundations, advanced Pokémon features, and production-readiness work are tracked in the Development Roadmap below.
 
 ---
 
@@ -271,9 +253,9 @@ Playwright is used for browser-level workflows, including:
 The latest full test suite contains:
 
 ```text
-20 test files
-77 tests
-77 passing
+24 test files
+87 tests
+87 passing
 ```
 
 ---
@@ -479,7 +461,7 @@ pnpm test:run
 * [ ] User-specific favorites
 * [ ] Local-to-server synchronization
 
-### Phase 5 — UX & Accessibility 🚧
+### Phase 5 — UX & Accessibility ✅
 
 * [x] Dark mode support with persistent theme preference
 * [x] Site-wide footer
@@ -490,10 +472,12 @@ pnpm test:run
   * [x] Skip-to-content link
   * [x] Semantic heading structure
   * [x] Live result announcements
-* [ ] Empty-state polish
-* [ ] Keyboard navigation
-* [ ] Mobile UX improvements
-* [ ] Performance optimization
+  * [x] Keyboard navigation
+    * [x] Escape-to-close navigation
+    * [x] Focus restoration
+* [x] Empty-state polish
+* [x] Mobile UX improvements
+* [x] Performance optimization
 
 ### Phase 6 — Advanced Pokémon Features 📋
 
@@ -506,7 +490,7 @@ pnpm test:run
 ### Phase 7 — Production 📋
 
 * [ ] Production deployment
-* [ ] Performance optimization
+* [ ] Production performance monitoring and optimization
 * [ ] Offline improvements
 * [ ] Production authentication
 * [ ] User-specific data synchronization
