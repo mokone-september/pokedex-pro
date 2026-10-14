@@ -12,7 +12,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Menu as MenuIcon } from "lucide-react";
+import { useState } from "react";
+import { AuthDialog } from "~/features/auth/AuthDialog";
 import { ThemeToggle } from "~/features/preferences/ThemeToggle";
+import { authClient } from "~/server/better-auth/client";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -22,6 +26,35 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const router = useRouter();
+  const sessionState = authClient.useSession();
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [signOutError, setSignOutError] = useState<string | null>(null);
+  const [signingOut, setSigningOut] = useState(false);
+  const user = sessionState.data?.user;
+  const authError = signOutError ?? sessionState.error?.message ?? null;
+
+  async function handleSignOut() {
+    setSignOutError(null);
+    setSigningOut(true);
+    try {
+      const result = await authClient.signOut();
+      if (result.error) {
+        setSignOutError(result.error.message ?? "Unable to sign out.");
+        return;
+      }
+      await sessionState.refetch();
+      router.refresh();
+    } catch (cause) {
+      setSignOutError(
+        cause instanceof Error ? cause.message : "Unable to sign out.",
+      );
+    } finally {
+      setSigningOut(false);
+    }
+  }
+
   return (
     <Box
       as="nav"
@@ -67,18 +100,40 @@ export default function Navbar() {
             {/* Rendered once, visible at every breakpoint */}
             <ThemeToggle />
 
-            {/* Desktop-only Sign In: on mobile it lives inside the menu */}
-            <Button
-              size="sm"
-              colorPalette="blue"
-              display={{ base: "none", md: "inline-flex" }}
-            >
-              Sign In
-            </Button>
+            <HStack display={{ base: "none", md: "flex" }} gap={2}>
+              {sessionState.isPending ? (
+                <Text color="fg.muted">Checking account…</Text>
+              ) : user ? (
+                <>
+                  <Text aria-label="Signed in as">
+                    {user.name ?? user.email}
+                  </Text>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleSignOut}
+                    disabled={signingOut}
+                  >
+                    {signingOut ? "Signing out…" : "Sign out"}
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  size="sm"
+                  colorPalette="blue"
+                  onClick={() => setAuthDialogOpen(true)}
+                >
+                  Sign In
+                </Button>
+              )}
+            </HStack>
 
             {/* Mobile-only hamburger menu: hidden at md and up */}
             <Box display={{ base: "block", md: "none" }}>
-              <Menu.Root>
+              <Menu.Root
+                open={mobileMenuOpen}
+                onOpenChange={(details) => setMobileMenuOpen(details.open)}
+              >
                 <Menu.Trigger asChild>
                   <IconButton
                     type="button"
@@ -91,7 +146,7 @@ export default function Navbar() {
                 </Menu.Trigger>
                 <Portal>
                   <Menu.Positioner>
-                    <Menu.Content>
+                    <Menu.Content hidden={!mobileMenuOpen}>
                       {navLinks.map((link) => (
                         <Menu.Item
                           key={link.label}
@@ -102,7 +157,31 @@ export default function Navbar() {
                         </Menu.Item>
                       ))}
                       <Menu.Separator />
-                      <Menu.Item value="sign-in">Sign In</Menu.Item>
+                      {sessionState.isPending ? (
+                        <Menu.Item value="checking-account" disabled>
+                          Checking account…
+                        </Menu.Item>
+                      ) : user ? (
+                        <>
+                          <Menu.Item value="account" disabled>
+                            Signed in as {user.name ?? user.email}
+                          </Menu.Item>
+                          <Menu.Item
+                            value="sign-out"
+                            onClick={handleSignOut}
+                            disabled={signingOut}
+                          >
+                            {signingOut ? "Signing out…" : "Sign out"}
+                          </Menu.Item>
+                        </>
+                      ) : (
+                        <Menu.Item
+                          value="sign-in"
+                          onClick={() => setAuthDialogOpen(true)}
+                        >
+                          Sign In
+                        </Menu.Item>
+                      )}
                     </Menu.Content>
                   </Menu.Positioner>
                 </Portal>
@@ -110,7 +189,16 @@ export default function Navbar() {
             </Box>
           </HStack>
         </HStack>
+        {authError && (
+          <Text role="alert" color="red.600" mt={2}>
+            {authError}
+          </Text>
+        )}
       </Container>
+      <AuthDialog
+        open={authDialogOpen}
+        onOpenChange={setAuthDialogOpen}
+      />
     </Box>
   );
 }

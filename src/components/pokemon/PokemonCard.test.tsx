@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from "vitest";
+import { describe, expect, it, beforeEach, vi } from "vitest";
 import { screen } from "@testing-library/react";
 
 import { customRender } from "~/test/render";
@@ -9,6 +9,24 @@ import {
 } from "~/features/favorites/favorites.store";
 
 import PokemonCard from "./PokemonCard";
+
+vi.mock("~/server/better-auth/client", () => ({
+  authClient: { useSession: () => ({ data: null, isPending: false }) },
+}));
+
+vi.mock("~/trpc/react", () => ({
+  api: {
+    favorites: {
+      add: { useMutation: () => ({ mutateAsync: vi.fn(), isPending: false }) },
+      remove: {
+        useMutation: () => ({ mutateAsync: vi.fn(), isPending: false }),
+      },
+    },
+    useUtils: () => ({
+      favorites: { list: { fetch: () => Promise.resolve([]) } },
+    }),
+  },
+}));
 
 const pokemon = {
   id: 25,
