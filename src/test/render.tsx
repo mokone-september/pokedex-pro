@@ -1,12 +1,17 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { render, type RenderOptions } from "@testing-library/react";
-import type { ReactElement } from "react";
+import { useState, type ReactElement } from "react";
 
 function AllProviders({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(
+    () => new QueryClient({ defaultOptions: { queries: { retry: false } } }),
+  );
+
   return (
-    <ChakraProvider value={defaultSystem}>
-      {children}
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider value={defaultSystem}>{children}</ChakraProvider>
+    </QueryClientProvider>
   );
 }
 

@@ -9,6 +9,10 @@ export const env = createEnv({
   server: {
     BETTER_AUTH_SECRET:
       process.env.NODE_ENV === "production" ? z.string() : z.string().optional(),
+    BETTER_AUTH_URL:
+      process.env.NODE_ENV === "production"
+        ? z.string().url()
+        : z.string().url().optional(),
     BETTER_AUTH_GITHUB_CLIENT_ID: z.string(),
     BETTER_AUTH_GITHUB_CLIENT_SECRET: z.string(),
     DATABASE_URL: z.string().url(),
@@ -33,6 +37,7 @@ export const env = createEnv({
    */
   runtimeEnv: {
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+    BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     BETTER_AUTH_GITHUB_CLIENT_ID: process.env.BETTER_AUTH_GITHUB_CLIENT_ID,
     BETTER_AUTH_GITHUB_CLIENT_SECRET: process.env.BETTER_AUTH_GITHUB_CLIENT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
